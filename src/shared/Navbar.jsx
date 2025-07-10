@@ -34,6 +34,9 @@ const Navbar = () => {
                 <li><NavLink to={"/dashboard/stats"}>Dashboard</NavLink></li>
             </>
         }
+        {
+            user ? (<li><NavLink to={'/myprofile'}> My profile </NavLink  ></li>) : ''
+        }
         <li><NavLink to={"/aboutus"}>About Us</NavLink></li>
 
     </>

@@ -7,6 +7,7 @@ import { auth } from '../Firebase/firebase.config';
 import Swal from 'sweetalert2';
 import Loading from '../component/Loading';
 import axios from 'axios';
+import UseAxios from '../hook/UseAxios';
 
 const Register = () => {
 
@@ -22,6 +23,7 @@ const Register = () => {
     const [nameError, setNameError] = useState('')
     const [passError, setPassError] = useState('')
     const [profilePic, setProfilePic] = useState('')
+    const axiosInstance = UseAxios()
     const navigate = useNavigate()
 
     const handleregister = (e) => {
@@ -77,7 +79,7 @@ const Register = () => {
             setPassError("")
         }
         createUser(email, password)
-            .then((userCredential) => {
+            .then(async (userCredential) => {
 
                 const user = userCredential.user;
 
@@ -85,14 +87,16 @@ const Register = () => {
                 const userinfo = {
                     email,
                     role: 'user',
-                    created_at: new Date().toISOString()
+                    created_at: new Date().toISOString(),
+                    last_log_in: new Date().toISOString()
                 }
 
+                const userRes = await axiosInstance.post('/users', userinfo)
+                console.log(userRes.data);
 
 
 
-
-                //update user profile in database
+                //update user profile in firebase
                 updateUser({ displayName: name, photoURL: profilePic })
                     .then(() => {
                         if (loading) {
@@ -153,17 +157,42 @@ const Register = () => {
 
     }
 
+    // const handleImage = async (e) => {
+    //     const image = e.target.files[0]
+    //     // console.log(image);
+
+    //     const formData = new FormData()
+    //     formData.append('image', image)
+    //     const imageUrl = `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_IMAGE_KEY}`
+    //     const res = await axios.post(imageUrl, formData)
+    //     //setProfilePic(res.data.data.url);
+    //     console.log(res.data);
+
+    // }
+    // using cloudinary
     const handleImage = async (e) => {
-        const image = e.target.files[0]
-        // console.log(image);
+        const image = e.target.files[0];
+        if (!image) return;
 
-        const formData = new FormData()
-        formData.append('image', image)
-        const imageUrl = `https://api.imgbb.com/1/upload?expiration=600&key=${import.meta.env.VITE_IMAGE_KEY}`
-        const res = await axios.post(imageUrl, formData)
-        setProfilePic(res.data.data.url);
+        const formData = new FormData();
+        formData.append("file", image);
+        formData.append("upload_preset", "unsigned_upload"); // your preset name
+        formData.append("cloud_name", "dkz7tuihl"); // your cloud name
 
-    }
+        try {
+            const res = await axios.post(
+                "https://api.cloudinary.com/v1_1/dkz7tuihl/image/upload",
+                formData
+            );
+
+            console.log("Image uploaded:", res.data.secure_url);
+            setProfilePic(res.data.secure_url);
+        } catch (error) {
+            console.error("Upload failed:", error);
+        }
+    };
+
+
 
 
 

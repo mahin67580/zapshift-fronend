@@ -12,6 +12,7 @@ import Myparcels from "../pages/dashboard/Myparcels";
 import Stats from "../component/Stats";
 import Payment from "../payment/Payment";
 import PaymentHistory from "../payment/PaymentHistory";
+import MyProfile from "../component/MyProfile";
 
 export const router = createBrowserRouter([
   {
@@ -27,8 +28,18 @@ export const router = createBrowserRouter([
         path: '/sendparcel',
         loader: () => fetch('/public/warehouses.json'),
         element:
-          <Privateroute><SendPercel></SendPercel></Privateroute>
-      }
+          <Privateroute>
+            <SendPercel></SendPercel>
+          </Privateroute>
+      },
+      {
+        path: '/myprofile',
+        element: (
+          <Privateroute>
+            <MyProfile />
+          </Privateroute>
+        )
+      },
     ]
   },
   {

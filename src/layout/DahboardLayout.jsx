@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { NavLink, Outlet } from 'react-router';
+import { Link, NavLink, Outlet } from 'react-router';
 import { FiMenu, FiX } from 'react-icons/fi';
+import Logo from '../shared/Logo';
 
 const DashboardLayout = () => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -49,7 +50,7 @@ const DashboardLayout = () => {
                     </button>
                 </div>
                 <div className="flex-1">
-                    <a className="btn btn-ghost normal-case text-xl">Dashboard</a>
+                    <a className="btn btn-ghost normal-case text-xl  ">Dashboard</a>
                 </div>
             </div>
 
@@ -58,7 +59,8 @@ const DashboardLayout = () => {
                 {isLargeScreen && (
                     <div className="w-64 min-h-screen bg-base-100 shadow-md">
                         <div className="p-4 border-b border-base-200">
-                            <h1 className="text-xl font-semibold">Dashboard</h1>
+
+                            <Link to={'/'}><Logo></Logo></Link>
                         </div>
                         <ul className="menu p-4 ">
                             {navLinks.map((link) => (
